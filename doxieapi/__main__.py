@@ -13,19 +13,22 @@ def main():
         print("Discovered {}.".format(scanner))
         for scan in scanner.download_scans_renamed(os.getcwd()):
             print("Saved {}".format(scan))
-            send_mail(  send_from='1494hardware@gmail.com',
-                        send_to='sam@1494.co.nz',
-                        subject='Test Subject',
-                        text='Scan from a Wild Doxie',
-                        files=[scan],
-                        server="smtp.gmail.com",
-                        port=587,
-                        username='1494hardware@gmail.com',
-                        password='hardware1',
-                        isTls=True)
+            head, tail = os.path.split(scan)
+            send_mail(  send_from= '1494hardware@gmail.com',
+                        send_to= 'sam@1494.co.nz',
+                        subject= tail + ' from ' + format(scanner),
+                        text= tail + ' from ' + format(scanner),
+                        files= [scan],
+                        server= "smtp.gmail.com",
+                        port= 587,
+                        username= '1494hardware@gmail.com',
+                        password= 'hardware1',
+                        isTls= True)
             print("Sent {}".format(scan))
+            os.remove(scan)
+            print("Deleted {} from local".format(scan))
         scanner.delete_scans([scan['name'] for scan in scanner.scans])
-        print("Deleted scans")
+        print("Deleted scans from Doxie")
 
 if __name__ == '__main__':
     main()
