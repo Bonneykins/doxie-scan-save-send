@@ -235,7 +235,9 @@ class DoxieScanner:
             path = "/scans{}".format(path)
         url = self._api_url(path)
         response = self._get_url(url, stream=True)
-        output_path = os.path.join(output_dir, os.path.basename(path + scan.['modified']))
+        root, ext = os.path.splitext(path)
+        output_filename = root + datetime.now().strftime("-%Y-%m-%d-%H%M%S") + ext
+        output_path = os.path.join(output_dir, os.path.basename(output_filename))
         if os.path.isfile(output_path):
             raise FileExistsError(output_path)
         with open(output_path, 'wb') as f:
