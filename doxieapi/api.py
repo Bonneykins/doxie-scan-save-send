@@ -15,6 +15,9 @@ import requests
 
 from . import ssdp
 
+# import datetime for naming files uniquely
+from datetime import datetime
+
 DOXIE_SSDP_SERVICE = "urn:schemas-getdoxie-com:device:Scanner:1"
 
 # Scans are downloaded in chunks of this many bytes:
@@ -219,6 +222,36 @@ class DoxieScanner:
         output_files = []
         for scan in self.scans:
             output_files.append(self.download_scan(scan['name'], output_dir))
+        return output_files
+
+    def download_scan_renamed(self, path, output_dir):
+        """
+        Downloads a scan at the given path to the given local dir,
+        renaming the file with current datetime.
+        Will raise an exception if the target file already exists.
+        Returns the path of the downloaded file.
+        """
+        if not path.startswith("/scans"):
+            path = "/scans{}".format(path)
+        url = self._api_url(path)
+        response = self._get_url(url, stream=True)
+        output_path = os.path.join(output_dir, os.path.basename(path+datetime.now()))
+        if os.path.isfile(output_path):
+            raise FileExistsError(output_path)
+        with open(output_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
+                f.write(chunk)
+        return output_path
+
+    def download_scans_renamed(self, output_dir):
+        """
+        Downloads all available scans from this Doxie to the specified dir,
+        renaming filenames from the scanner with current datetime.
+        Returns a list of the downloaded files.
+        """
+        output_files = []
+        for scan in self.scans:
+            output_files.append(self.download_scan_renamed(scan['name'], output_dir))
         return output_files
 
     def delete_scan(self, path, retries=3, timeout=5):
