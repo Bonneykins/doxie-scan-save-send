@@ -235,7 +235,9 @@ class DoxieScanner:
             path = "/scans{}".format(path)
         url = self._api_url(path)
         response = self._get_url(url, stream=True)
+        # splits file path into root & extension
         root, ext = os.path.splitext(path)
+        # inserts datetime.now into end of filename for uniqueness
         output_filename = root + datetime.now().strftime("-%Y-%m-%d-%H%M%S") + ext
         output_path = os.path.join(output_dir, os.path.basename(output_filename))
         if os.path.isfile(output_path):
