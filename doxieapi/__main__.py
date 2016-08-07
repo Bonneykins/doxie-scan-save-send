@@ -10,8 +10,7 @@ def main():
         print("Discovered {}.".format(doxie))
         for scan in doxie.download_scans_renamed(os.getcwd()):
             print("Saved {}".format(scan))
-        for scan in doxie.delete_scans([scan['name'] for scan in scanner.scans])
-            print("Deleted {}".format(scan))
+
 
 if __name__ == '__main__':
     main()
