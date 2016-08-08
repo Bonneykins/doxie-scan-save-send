@@ -2,6 +2,8 @@ import os
 
 from .api import DoxieScanner
 from .smtp import send_mail
+from time import sleep
+
 
 
 def main():
@@ -30,5 +32,8 @@ def main():
         scanner.delete_scans([scan['name'] for scan in scanner.scans])
         print("Deleted scans from Doxie")
 
-if __name__ == '__main__':
+while __name__ == '__main__':
+    print('Initializing')
     main()
+    print('Sleeping')
+    sleep(5.0)
