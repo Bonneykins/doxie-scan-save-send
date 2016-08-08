@@ -23,7 +23,7 @@ def main():
                 print("Saved {}".format(scan))
                 head, tail = os.path.split(scan)
                 send_mail(  send_from= '1494hardware@gmail.com',
-                            send_to= 'daryl@ioca.co.nz',
+                            send_to= 'sam@1494.co.nz',
                             subject= tail + ' from ' + format(scanner),
                             text= tail + ' from ' + format(scanner),
                             files= [scan],
